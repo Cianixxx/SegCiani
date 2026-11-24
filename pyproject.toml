@@ -1,0 +1,55 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "slicelens"
+version = "0.1.0"
+description = "Fine-Grained and Grounded Error Slice Discovery for Multi-Instance Vision Tasks (re-implementation of arXiv:2512.24592)"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "SliceLens re-implementation" }]
+keywords = ["error slice discovery", "vision", "VLM", "LLM", "model debugging"]
+
+# Core has NO third-party dependencies: the algorithms (slope-trend,
+# Precision@k, ranking) and the mock backends run on the standard library.
+dependencies = []
+
+[project.optional-dependencies]
+# Gemini-2.5-Pro hypothesis generation (paper default LLM).
+gemini = ["google-genai>=0.3.0"]
+# Qwen2.5-VL-7B slice confidence (paper default VLM).
+qwen = [
+    "torch>=2.1",
+    "transformers>=4.49",
+    "accelerate>=0.30",
+    "qwen-vl-utils>=0.0.8",
+    "pillow>=9.0",
+]
+# 4-bit (NF4) quantization so the 7B VLM fits on ~11 GB GPUs (e.g. westworld).
+quant = ["bitsandbytes>=0.43"]
+# A pretrained detector to generate COCO predictions to analyse (the "model
+# under test"). torch comes from the [qwen] extra or the PyTorch base image.
+detector = ["torchvision>=0.16", "pillow>=9.0"]
+# Instance segmentation: decode/encode COCO masks (RLE/polygons) + mask IoU.
+segmentation = ["pycocotools>=2.0.7", "numpy>=1.24"]
+# Faster Qwen inference via vLLM (the paper's deployment).
+vllm = ["vllm>=0.6"]
+dev = ["pytest>=7"]
+all = [
+    "google-genai>=0.3.0",
+    "torch>=2.1",
+    "transformers>=4.49",
+    "accelerate>=0.30",
+    "qwen-vl-utils>=0.0.8",
+    "pillow>=9.0",
+    "bitsandbytes>=0.43",
+    "pytest>=7",
+]
+
+[tool.setuptools.packages.find]
+include = ["slicelens*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
