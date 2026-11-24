@@ -61,3 +61,7 @@ in the thesis. Paths are relative to the repository root; data are expected unde
   year   = {2026}
 }
 ```
+
+## License
+
+MIT, see `LICENSE`. The datasets and models used by the pipeline keep their own licenses.
